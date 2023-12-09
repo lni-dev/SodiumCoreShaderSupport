@@ -26,12 +26,13 @@ public abstract class MixinGLProgram extends GlObject {
         int index = GL20C.glGetUniformLocation(this.handle(), name);
 
         if(index < 0) {
-            if (GL20C.glGetError() == GL20C.GL_INVALID_OPERATION)
+            int error = GL20C.glGetError();
+            if (error == GL20C.GL_INVALID_OPERATION)
                 getLOGGER().warn("Error while binding uniform: GL_INVALID_OPERATION");
-            else if (GL20C.glGetError() == GL20C.GL_INVALID_VALUE)
+            else if (error == GL20C.GL_INVALID_VALUE)
                 getLOGGER().warn("Error while binding uniform: GL_INVALID_VALUE");
             else
-                getLOGGER().warn("Error while binding uniform: Unknown Error, code: " + GL20C.glGetError());
+                getLOGGER().warn("Error while binding uniform: Unknown Error, code: " + error);
         }
 
         return factory.apply(index);

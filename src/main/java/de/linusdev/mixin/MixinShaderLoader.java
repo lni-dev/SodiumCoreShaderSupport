@@ -46,6 +46,7 @@ public class MixinShaderLoader {
                     + "' for shader '" + name.getPath() + "'");
 
         try {
+            SodiumCoreShaderSupport.LOGGER.info("Loaded Shader '" + name.getNamespace() + ":" + name.getPath() + "' from pack '" + shaderResource.getPack().getName() + "'.");
             return IOUtils.toString(shaderResource.getInputStream(), StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new RuntimeException("Exception while reading shader source in namespace '" + name.getNamespace()

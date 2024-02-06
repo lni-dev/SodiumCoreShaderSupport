@@ -1,7 +1,8 @@
 plugins {
-	id 'fabric-loom' version '1.4-SNAPSHOT'
+	id 'fabric-loom' version '1.5-SNAPSHOT'
 	id 'maven-publish'
 	id "com.modrinth.minotaur" version "2.+"
+	id 'com.matthewprenger.cursegradle' version '1.4.0'
 }
 
 version = project.mod_version
@@ -49,6 +50,22 @@ if(project.hasProperty("modrinthToken")) {
 		uploadFile = remapJar // Tells Minotaur to use the remapped jar
 		gameVersions = ['1.20.4'] // An array of game versions the version supports
 		loaders = ['fabric'] // Self-explanatory.
+	}
+}
+
+if(project.hasProperty("curseForgeToken")) {
+	curseforge {
+		apiKey = curseForgeToken
+		project {
+			id = '956376'
+			releaseType = 'release'
+			changelog = 'see github'
+			addGameVersion minecraft_version
+
+			mainArtifact(remapJar) {
+				displayName = "Sodium Core Shader Support $minecraft_version $mod_version"
+			}
+		}
 	}
 }
 

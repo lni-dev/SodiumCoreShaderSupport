@@ -1,7 +1,7 @@
 package de.linusdev.mixin;
 
-import me.jellysquid.mods.sodium.client.gl.GlObject;
-import me.jellysquid.mods.sodium.client.gl.shader.uniform.GlUniform;
+import net.caffeinemc.mods.sodium.client.gl.GlObject;
+import net.caffeinemc.mods.sodium.client.gl.shader.uniform.GlUniform;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL20C;
 import org.spongepowered.asm.mixin.Mixin;
@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 import java.util.function.IntFunction;
 
-@Mixin(me.jellysquid.mods.sodium.client.gl.shader.GlProgram.class)
+@Mixin(net.caffeinemc.mods.sodium.client.gl.shader.GlProgram.class)
 public abstract class MixinGLProgram extends GlObject {
 
     @Accessor(value = "LOGGER", remap = false)

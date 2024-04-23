@@ -64,7 +64,7 @@ public class SodiumCoreShaderSupport implements ClientModInitializer {
                                     shaders.forEach((nameSpace, map) -> {
                                         System.out.println("nameSpace: " + nameSpace);
                                         map.forEach((path, resource) -> {
-                                            System.out.println("    " + path + ": " + resource.getResourcePackName());
+                                            System.out.println("    " + path + ": " + resource.getPack().getInfo().title().getString());
                                         });
                                     });
 

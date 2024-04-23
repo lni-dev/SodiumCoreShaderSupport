@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.5-SNAPSHOT'
+	id 'fabric-loom' version '1.6.5'
 	id 'maven-publish'
 	id "com.modrinth.minotaur" version "2.+"
 	id 'com.matthewprenger.cursegradle' version '1.4.0'
@@ -48,7 +48,7 @@ if(project.hasProperty("modrinthToken")) {
 		versionNumber = mod_version // The (preferably SemVer) version of the mod. If not specified, it'll use the `version` declaration
 		versionName = 'SodiumCoreShaderSupport' // The version title. If not specified, it'll use the version number
 		uploadFile = remapJar // Tells Minotaur to use the remapped jar
-		gameVersions = ['1.20.4'] // An array of game versions the version supports
+		gameVersions = [minecraft_version] // An array of game versions the version supports
 		loaders = ['fabric'] // Self-explanatory.
 	}
 }

@@ -40,7 +40,7 @@ public class SodiumCoreShaderSupport implements ClientModInitializer {
 
                             @Override
                             public Identifier getFabricId() {
-                                return new Identifier("sodium", "shaders");
+                                return Identifier.of("sodium", "shaders");
                             }
 
                             @Override

@@ -5,7 +5,10 @@ plugins {
 	id 'com.matthewprenger.cursegradle' version '1.+'
 }
 
-version = project.mod_version
+def sodium_versions = sodium_version.split("-")
+
+def upload_ready_mod_version = project.mod_version + "-sodium" + sodium_versions[1]
+version = upload_ready_mod_version
 group = project.maven_group
 
 base {
@@ -45,7 +48,7 @@ if(project.hasProperty("modrinthToken")) {
 	modrinth {
 		token = modrinthToken // Please use an environment variable for this! The default is `$MODRINTH_TOKEN`.
 		projectId = 'G8yJPRdl' // The ID of your Modrinth project. Slugs will not work.
-		versionNumber = mod_version // The (preferably SemVer) version of the mod. If not specified, it'll use the `version` declaration
+		versionNumber = upload_ready_mod_version // The (preferably SemVer) version of the mod. If not specified, it'll use the `version` declaration
 		versionName = 'SodiumCoreShaderSupport' // The version title. If not specified, it'll use the version number
 		uploadFile = remapJar // Tells Minotaur to use the remapped jar
 		gameVersions = [minecraft_version] // An array of game versions the version supports
@@ -63,7 +66,7 @@ if(project.hasProperty("curseForgeToken")) {
 			addGameVersion minecraft_version
 
 			mainArtifact(remapJar) {
-				displayName = "Sodium Core Shader Support $minecraft_version $mod_version"
+				displayName = "Sodium Core Shader Support $minecraft_version $upload_ready_mod_version"
 			}
 		}
 	}
@@ -72,7 +75,6 @@ if(project.hasProperty("curseForgeToken")) {
 processResources {
 	// rotate sodium version to match the version specified in the mod
 	// which differs from the one on maven central
-	def sodium_versions = sodium_version.split("-")
 	def svp = sodium_versions[1] + "+" + sodium_versions[0]
 
 	inputs.property "version", project.version

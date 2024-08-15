@@ -8,6 +8,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(PackListWidget.class)
 public interface MixinPackListWidget {
 
-    @Accessor(value = "screen", remap = false)
+    @Accessor(value = "screen")
     public PackScreen getScreen();
 }

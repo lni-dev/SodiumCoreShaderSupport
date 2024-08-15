@@ -2,6 +2,24 @@
 
 Enables resourcepacks to replace sodium's shaders, similar to resourcepacks being able to replace vanilla's core shaders.
 
+## How to specify which sodium versions are supported
+Inside your resourcepack create a new directory `assets/sodiumcoreshadersupport` and the file `versions.json` inside. Example:
+```json
+{
+  "supported-versions": {
+    "1.21": [ "0.5.11+mc1.21" ],
+    "1.21.1": [ "0.5.11+mc1.21" ]
+  }
+}
+```
+Inside `supported-versions` must be a map, which maps different minecraft versions to an array of allowed sodium versions.
+The SodiumCoreShaderSupport mod will check if the installed sodium version is contained in the array of the installed minecraft version.
+<br>
+- If the minecraft and/or sodium version is not inside `supported-versions`, the pack cannot be activated by the user.
+- If the user does not have sodium installed the pack can be activated.
+- If no versions.json is present, the pack can be activated with a warning message.
+- If the versions.json is malformed, the pack can be activated with a warning message.
+
 ## How to write shaders for sodium?
 Sodium shaders are similar to core shaders, but not the same.
 The base Sodium Shaders can be found [here](https://github.com/CaffeineMC/sodium-fabric/tree/dev/src/main/resources/assets/sodium/shaders).

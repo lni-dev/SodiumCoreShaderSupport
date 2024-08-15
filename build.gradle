@@ -70,10 +70,16 @@ if(project.hasProperty("curseForgeToken")) {
 }
 
 processResources {
+	// rotate sodium version to match the version specified in the mod
+	// which differs from the one on maven central
+	def sodium_versions = sodium_version.split("-")
+	def svp = sodium_versions[1] + "+" + sodium_versions[0]
+
 	inputs.property "version", project.version
+	inputs.property "sodium_version", svp
 
 	filesMatching("fabric.mod.json") {
-		expand "version": project.version
+		expand"version": project.version, "sodium_version": svp
 	}
 }
 

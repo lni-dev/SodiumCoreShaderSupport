@@ -6,8 +6,11 @@ plugins {
 }
 
 def sodium_versions = sodium_version.split("-")
+def isSodiumBeta = sodium_versions.length > 2 && sodium_versions[2].contains("beta")
 
 def upload_ready_mod_version = project.mod_version + "-sodium" + sodium_versions[1]
+if(isSodiumBeta) upload_ready_mod_version += sodium_versions[2]
+
 version = upload_ready_mod_version
 group = project.maven_group
 
@@ -77,11 +80,19 @@ processResources {
 	// which differs from the one on maven central
 	def svp = sodium_versions[1] + "+" + sodium_versions[0]
 
+	if(isSodiumBeta)
+		svp = sodium_versions[1] + "-" + sodium_versions[2] + "+" + sodium_versions[0]
+
 	inputs.property "version", project.version
 	inputs.property "sodium_version", svp
+	inputs.property "loader_version", loader_version
+	inputs.property "minecraft_version", minecraft_version
 
 	filesMatching("fabric.mod.json") {
-		expand"version": project.version, "sodium_version": svp
+		expand  "version": project.version,
+				"sodium_version": svp,
+				"loader_version": loader_version,
+				"minecraft_version": minecraft_version
 	}
 }
 

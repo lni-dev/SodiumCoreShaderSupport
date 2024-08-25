@@ -23,8 +23,8 @@
 		"sodiumcoreshadersupport.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.15.11",
-		"minecraft": "~1.21",
+		"fabricloader": ">=${loader_version}",
+		"minecraft": "${minecraft_version}",
 		"java": ">=17",
 		"fabric-api": "*",
 		"sodium": "${sodium_version}"

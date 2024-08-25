@@ -8,7 +8,9 @@ import net.minecraft.client.gui.screen.DialogScreen;
 import net.minecraft.client.gui.screen.pack.PackListWidget;
 import net.minecraft.client.gui.screen.pack.ResourcePackOrganizer;
 import net.minecraft.resource.ResourcePackProfile;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.text.TextColor;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -39,12 +41,12 @@ public abstract class MixinResourcePackEntry {
                 // Do nothing, pack can be enabled.
             }
             case NOT_COMPATIBLE -> {
-                String title = "Try these minecraft versions:";
+                String title = "Compatible minecraft versions:";
                 assert ret.minecraftVersions() != null;
                 String msg = ret.minecraftVersions().stream().reduce((string, string2) -> string + ", " + string2).orElse("none");
 
                 if(ret.correctMcVersionIndex() != null) {
-                    title = "Try these sodium versions:";
+                    title = "Compatible sodium versions for current minecraft version:";
                     assert ret.sodiumVersions() != null;
                     var sMsg = ret.sodiumVersions().stream().reduce((string, string2) -> string + ", " + string2);
                     msg = sMsg.orElseGet(() ->
@@ -56,9 +58,16 @@ public abstract class MixinResourcePackEntry {
                 }
 
                 this.client.setScreen(new ConfirmScreen(
-                        t -> this.client.setScreen(((MixinPackListWidget) this.widget).getScreen()),
+                        confirmed -> {
+                            this.client.setScreen(((MixinPackListWidget) this.widget).getScreen());
+                            if (confirmed) {
+                                this.pack.enable();
+                            }
+                        },
                         Text.of("Resourcepack not compatible with current sodium or minecraft version."),
-                        Text.of(title + " " + msg), Text.of("OK"), Text.of("OK")
+                        Text.of(title + " " + msg),
+                        Text.literal("Enable Anyway").setStyle(Style.EMPTY.withColor(0xff0000)),
+                        Text.of("OK")
                 ));
 
                 cir.setReturnValue(false);

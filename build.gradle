@@ -11,6 +11,18 @@ def isSodiumBeta = sodium_versions.length > 2 && sodium_versions[2].contains("be
 def upload_ready_mod_version = project.mod_version + "-sodium" + sodium_versions[1]
 if(isSodiumBeta) upload_ready_mod_version += sodium_versions[2]
 
+def supp_mc_versions = new ArrayList<String>();
+supp_mc_versions.add(minecraft_version)
+
+def scss_release_type = isSodiumBeta ? "beta" : "release"
+
+if(!additional_supported_mc_versions.isEmpty()) {
+	def versions = additional_supported_mc_versions.split(",");
+	for (final def v in versions) {
+		supp_mc_versions.add(v)
+	}
+}
+
 version = upload_ready_mod_version
 group = project.maven_group
 
@@ -54,8 +66,9 @@ if(project.hasProperty("modrinthToken")) {
 		versionNumber = upload_ready_mod_version // The (preferably SemVer) version of the mod. If not specified, it'll use the `version` declaration
 		versionName = 'SodiumCoreShaderSupport' // The version title. If not specified, it'll use the version number
 		uploadFile = remapJar // Tells Minotaur to use the remapped jar
-		gameVersions = [minecraft_version] // An array of game versions the version supports
+		gameVersions = supp_mc_versions // An array of game versions the version supports
 		loaders = ['fabric'] // Self-explanatory.
+		versionType = scss_release_type
 	}
 }
 
@@ -64,9 +77,10 @@ if(project.hasProperty("curseForgeToken")) {
 		apiKey = curseForgeToken
 		project {
 			id = '956376'
-			releaseType = 'release'
+			releaseType = scss_release_type
 			changelog = 'see github'
-			addGameVersion minecraft_version
+			for (final def v in supp_mc_versions)
+				addGameVersion v
 
 			mainArtifact(remapJar) {
 				displayName = "Sodium Core Shader Support $minecraft_version $upload_ready_mod_version"
@@ -83,13 +97,9 @@ processResources {
 	if(isSodiumBeta)
 		svp = sodium_versions[1] + "-" + sodium_versions[2] + "+" + sodium_versions[0]
 
-	String mcVerArray = "[ \"" + minecraft_version + "\"";
-	if(!additional_supported_mc_versions.isEmpty()) {
-		def versions = additional_supported_mc_versions.split(",");
-		for (final def v in versions) {
-			mcVerArray += ", \"" + v + "\""
-		}
-	}
+	String mcVerArray = "[ \"" + supp_mc_versions[0] + "\"";
+	for(int i = 1; i < supp_mc_versions.size(); i++)
+		mcVerArray += ", \"" + supp_mc_versions.get(i) + "\""
 
 	mcVerArray += "]"
 

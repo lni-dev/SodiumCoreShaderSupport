@@ -83,16 +83,26 @@ processResources {
 	if(isSodiumBeta)
 		svp = sodium_versions[1] + "-" + sodium_versions[2] + "+" + sodium_versions[0]
 
+	String mcVerArray = "[ \"" + minecraft_version + "\"";
+	if(!additional_supported_mc_versions.isEmpty()) {
+		def versions = additional_supported_mc_versions.split(",");
+		for (final def v in versions) {
+			mcVerArray += ", \"" + v + "\""
+		}
+	}
+
+	mcVerArray += "]"
+
 	inputs.property "version", project.version
 	inputs.property "sodium_version", svp
 	inputs.property "loader_version", loader_version
-	inputs.property "minecraft_version", minecraft_version
+	inputs.property "minecraft_version", mcVerArray
 
 	filesMatching("fabric.mod.json") {
 		expand  "version": project.version,
 				"sodium_version": svp,
 				"loader_version": loader_version,
-				"minecraft_version": minecraft_version
+				"minecraft_version": mcVerArray
 	}
 }
 

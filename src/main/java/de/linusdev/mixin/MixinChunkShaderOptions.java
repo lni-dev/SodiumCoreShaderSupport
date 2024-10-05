@@ -13,8 +13,8 @@ import org.spongepowered.asm.mixin.Shadow;
 @Mixin(ChunkShaderOptions.class)
 public abstract class MixinChunkShaderOptions {
 
-    @Shadow @Final private ChunkFogMode fog;
-    @Shadow @Final private TerrainRenderPass pass;
+    @Shadow(remap = false) @Final private ChunkFogMode fog;
+    @Shadow(remap = false) @Final private TerrainRenderPass pass;
 
     /**
      * @author linusdev

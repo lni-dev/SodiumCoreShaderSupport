@@ -69,6 +69,7 @@ if(project.hasProperty("modrinthToken")) {
 		gameVersions = supp_mc_versions // An array of game versions the version supports
 		loaders = ['fabric'] // Self-explanatory.
 		versionType = scss_release_type
+		changelog = mod_changelog
 	}
 }
 
@@ -78,7 +79,7 @@ if(project.hasProperty("curseForgeToken")) {
 		project {
 			id = '956376'
 			releaseType = scss_release_type
-			changelog = 'see github'
+			changelog = mod_changelog
 			for (final def v in supp_mc_versions)
 				addGameVersion v
 

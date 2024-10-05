@@ -22,7 +22,7 @@ The SodiumCoreShaderSupport mod will check if the installed sodium version is co
 
 ## How to write shaders for sodium?
 Sodium shaders are similar to core shaders, but not the same.
-The base Sodium Shaders can be found [here](https://github.com/CaffeineMC/sodium-fabric/tree/dev/src/main/resources/assets/sodium/shaders).
+The base Sodium Shaders can be found [here](https://github.com/CaffeineMC/sodium-fabric/tree/dev/common/src/main/resources/assets/sodium/shaders).
 Sodium Shaders must be in `assets/sodium/shaders` directory. But you can `#import` files from
 `assets/minecraft/shaders` using the `#import` directive. The following code will include
 the file `assets/minecraft/shaders/include/test.glsl`:
@@ -32,3 +32,10 @@ the file `assets/minecraft/shaders/include/test.glsl`:
 I recommend to create custom glsl files, which you can `#import` in your shaders (in both core shaders and sodium shaders).
 These files, should contain your main shader "logic". An example shaderpack, which
 works on both vanilla and sodium, can be found [here](https://github.com/lni-dev/MinecraftShaders/tree/master/EnergyShaders%20%5BJava%5D/current/Energy%20Shaders%20%5BJava%5D/assets).
+
+### Differentiate Terrain-Types in Shaders
+In the sodium shaders `block_layer_opaque.fsh` and `block_layer_opaque.vsh` additional defines will be present for some
+terrain-types:
+- `RENDER_PASS_SOLID`: Solid Blocks
+- `RENDER_PASS_CUTOUT`: Blocks like leaves, grass, glass, ...
+- `RENDER_PASS_TRANSLUCENT`: Blocks with actual transparency, e.g. water, honey, slime, ...

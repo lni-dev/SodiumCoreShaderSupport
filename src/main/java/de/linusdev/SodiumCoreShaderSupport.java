@@ -50,11 +50,11 @@ public class SodiumCoreShaderSupport implements ClientModInitializer {
 
                             @Override
                             public Identifier getFabricId() {
-                                return Identifier.of("sodium", "shaders");
+                                return Identifier.of("sodiumcoreshadersupport", "shaderloader");
                             }
 
                             @Override
-                            public CompletableFuture<Void> load(ResourceManager manager, Profiler profiler, Executor executor) {
+                            public CompletableFuture<Void> load(ResourceManager manager, Executor executor) {
                                 return CompletableFuture.supplyAsync(() -> {
                                     LOGGER.info("Loading shaders...");
                                     shaders = new HashMap<>();
@@ -83,10 +83,10 @@ public class SodiumCoreShaderSupport implements ClientModInitializer {
                             }
 
                             @Override
-                            public CompletableFuture<Void> apply(Void data, ResourceManager manager, Profiler profiler, Executor executor) {
-                                return CompletableFuture.runAsync(() -> {
-                                }, executor);
+                            public CompletableFuture<Void> apply(Void unused, ResourceManager resourceManager, Executor executor) {
+                                return CompletableFuture.runAsync(() -> {}, executor);
                             }
+
                         });
     }
 

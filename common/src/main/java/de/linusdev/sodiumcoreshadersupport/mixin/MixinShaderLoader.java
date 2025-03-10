@@ -1,0 +1,63 @@
+package de.linusdev.sodiumcoreshadersupport.mixin;
+
+
+import net.caffeinemc.mods.sodium.client.gl.shader.GlShader;
+import net.caffeinemc.mods.sodium.client.gl.shader.ShaderConstants;
+import net.caffeinemc.mods.sodium.client.gl.shader.ShaderLoader;
+import net.caffeinemc.mods.sodium.client.gl.shader.ShaderType;
+import net.minecraft.resources.ResourceLocation;
+import org.apache.commons.io.IOUtils;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
+import static de.linusdev.sodiumcoreshadersupport.CommonClass.shaders;
+import static de.linusdev.sodiumcoreshadersupport.Constants.LOG;
+
+@Mixin(ShaderLoader.class)
+public class MixinShaderLoader {
+
+    @Inject(at = @At("HEAD"), method = "loadShader")
+    private static void loadShaderInject(
+            ShaderType type,
+            ResourceLocation name,
+            ShaderConstants constants, CallbackInfoReturnable<GlShader> cir
+    ) {
+        LOG.info("Start loading shader in namespace '"  + name.getNamespace() + "': " + name.getPath());
+    }
+
+    /**
+     * @author LinusDev
+     * @reason Load shaders from resources, loaded by then ResourceManager instead of reading them as java resource.
+     */
+    @Overwrite
+    public static String getShaderSource(ResourceLocation name) {
+        var nameSpace = shaders.get(name.getNamespace());
+
+        if(nameSpace == null)
+            throw new RuntimeException("No Shaders available for namespace '" + name.getNamespace() + "'");
+
+        var shaderResource = nameSpace.get(name.getPath());
+
+        if(shaderResource == null)
+            throw new RuntimeException("No Shader found in namespace '" + name.getNamespace()
+                    + "' for shader '" + name.getPath() + "'");
+
+        try {
+            try(var source = shaderResource.source()) {
+                LOG.info("Loaded Shader '{}:{}' from pack '{}'.", name.getNamespace(), name.getPath(), source.location().title().getString());
+            }
+
+            return IOUtils.toString(shaderResource.open(), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new RuntimeException("Exception while reading shader source in namespace '" + name.getNamespace()
+                    + "' for shader '" + name.getPath() + "'", e);
+        }
+    }
+
+}

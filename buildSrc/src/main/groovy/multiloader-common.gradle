@@ -9,11 +9,11 @@ def isSodiumBeta = sodium_versions.length > 2 && sodium_versions[2].contains("be
 String artefact_mod_version = ""
 String upload_ready_mod_version = ""
 if(!isSodiumBeta) {
-    artefact_mod_version = "mc${minecraft_version}-sodium${sodium_versions[1]}-${project.name}-${project.mod_version}"
-    upload_ready_mod_version = "sodium${sodium_versions[1]}-${project.name}-${project.mod_version}"
+    artefact_mod_version = "${project.mod_version}-mc${minecraft_version}-sodium${sodium_versions[1]}-${project.name}"
+    upload_ready_mod_version = "${project.mod_version}-sodium${sodium_versions[1]}-${project.name}"
 } else {
-    artefact_mod_version = "mc${minecraft_version}-sodium${sodium_versions[1]}${sodium_versions[2]}-${project.name}-${project.mod_version}"
-    upload_ready_mod_version = "sodium${sodium_versions[1]}${sodium_versions[2]}-${project.name}-${project.mod_version}"
+    artefact_mod_version = "${project.mod_version}-mc${minecraft_version}-sodium${sodium_versions[1]}${sodium_versions[2]}-${project.name}"
+    upload_ready_mod_version = "${project.mod_version}-sodium${sodium_versions[1]}${sodium_versions[2]}-${project.name}"
 }
 
 def supp_mc_versions = new ArrayList<String>();

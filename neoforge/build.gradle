@@ -84,8 +84,8 @@ if(project.hasProperty("modrinthToken") && project.hasProperty("curseForgeToken"
     }
 
     tasks.register("publish NeoForge toModrinthAndCurseForge") {
-        dependsOn(modrinth)
-        dependsOn("publishCurseForge")
+        dependsOn(tasks.named("modrinth"))
+        dependsOn(tasks.named("publishCurseForge"))
     }
 }
 

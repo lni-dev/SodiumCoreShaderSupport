@@ -81,7 +81,7 @@ if(project.hasProperty("modrinthToken")) {
     }
 
     tasks.register("publish Fabric toModrinthAndCurseForge") {
-        dependsOn(modrinth)
-        dependsOn("publishCurseForge")
+        dependsOn(tasks.named("modrinth"))
+        dependsOn(tasks.named("publishCurseForge"))
     }
 }

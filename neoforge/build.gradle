@@ -80,7 +80,7 @@ if(project.hasProperty("modrinthToken") && project.hasProperty("curseForgeToken"
             mainFile.addGameVersion(v)
         mainFile.addGameVersion("neoforge")
         mainFile.changelog = 'The changelog string for this file.'
-        mainFile.displayName = "Sodium Core Shader Support $minecraft_version $upload_ready_mod_version"
+        mainFile.displayName = "$upload_ready_mod_version-$minecraft_version"
     }
 
     tasks.register("publish NeoForge toModrinthAndCurseForge") {

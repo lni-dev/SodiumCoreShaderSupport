@@ -29,7 +29,8 @@ if(!additional_supported_mc_versions.isEmpty()) {
 }
 
 ext.upload_ready_mod_version = upload_ready_mod_version
-ext.supp_mc_versions = supp_mc_versions
+ext.supp_mc_versions_fabric = supp_mc_versions
+ext.supp_mc_versions_neoforge = List.of(minecraft_version)
 ext.scss_release_type = scss_release_type
 
 base {
@@ -138,10 +139,6 @@ processResources {
 
     // NeoForge version range is really goofy. It must be: https://maven.apache.org/enforcer/enforcer-rules/versionRanges.html
     def mcVerRangeNeoForge = "[" + supp_mc_versions[0] + "]"
-    for(int i = 1; i < supp_mc_versions.size(); i++)
-        mcVerRangeNeoForge += ",[" + supp_mc_versions.get(i) + "]"
-
-
 
     var expandProps = [
             'version'                      : mod_version,

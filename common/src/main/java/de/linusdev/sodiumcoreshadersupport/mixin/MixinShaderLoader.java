@@ -49,9 +49,10 @@ public class MixinShaderLoader {
                     + "' for shader '" + name.getPath() + "'");
 
         try {
-            try(var source = shaderResource.source()) {
-                LOG.info("Loaded Shader '{}:{}' from pack '{}'.", name.getNamespace(), name.getPath(), source.location().title().getString());
-            }
+
+            //noinspection resource: This would close the pack which is not what we want.
+            LOG.info("Loaded Shader '{}:{}' from pack '{}'.", name.getNamespace(), name.getPath(), shaderResource.source().location().title().getString());
+
 
             return IOUtils.toString(shaderResource.open(), StandardCharsets.UTF_8);
         } catch (IOException e) {

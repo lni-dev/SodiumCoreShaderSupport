@@ -75,9 +75,8 @@ public class CommonClass {
         shaders.forEach((nameSpace, map) -> {
             System.out.println("nameSpace: " + nameSpace);
             map.forEach((path, resource) -> {
-                try(var source = resource.source()) {
-                    System.out.println("    " + path + ": " + source.location().title().getString());
-                }
+                //noinspection resource: This would close the pack which is not what we want.
+                System.out.println("    " + path + ": " + resource.source().location().title().getString());
             });
         });
     }

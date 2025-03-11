@@ -1,8 +1,10 @@
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
+
 plugins {
     id 'multiloader-loader'
     id 'fabric-loom'
     id "com.modrinth.minotaur" version "2.+"
-    id 'com.matthewprenger.cursegradle' version '1.+'
+    id 'net.darkhax.curseforgegradle' version '1.1.15'
 }
 
 repositories {
@@ -63,21 +65,23 @@ if(project.hasProperty("modrinthToken")) {
         versionType = scss_release_type
         changelog = mod_changelog
     }
-}
 
-if(project.hasProperty("curseForgeToken")) {
-    curseforge {
-        apiKey = curseForgeToken
-        project {
-            id = '956376'
-            releaseType = scss_release_type
-            changelog = mod_changelog
-            for (final def v in supp_mc_versions)
-                addGameVersion v
+    tasks.register("publishCurseForge", TaskPublishCurseForge) {
+        apiToken = curseForgeToken
 
-            mainArtifact(jar) {
-                displayName = "Sodium Core Shader Support $minecraft_version $upload_ready_mod_version"
-            }
-        }
+        def mainFile = upload(956376, remapJar)
+        mainFile.releaseType = "${scss_release_type}"
+        mainFile.changelog = "${mod_changelog}"
+        mainFile.changelogType = 'markdown'
+        for (final def v in supp_mc_versions)
+            mainFile.addGameVersion(v)
+        mainFile.addGameVersion("fabric")
+        mainFile.changelog = 'The changelog string for this file.'
+        mainFile.displayName = "Sodium Core Shader Support $minecraft_version $upload_ready_mod_version"
+    }
+
+    tasks.register("publish Fabric toModrinthAndCurseForge") {
+        dependsOn(modrinth)
+        dependsOn("publishCurseForge")
     }
 }

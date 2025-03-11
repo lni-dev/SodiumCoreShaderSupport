@@ -4,6 +4,7 @@ package de.linusdev.sodiumcoreshadersupport;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.Unit;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
@@ -33,7 +34,9 @@ public class SodiumCoreShaderSupport implements PreparableReloadListener {
     public @NotNull CompletableFuture<Void> reload(
             @NotNull PreparationBarrier barrier,
             @NotNull ResourceManager manager,
-            @NotNull Executor backgroundExecutor,
+            @NotNull ProfilerFiller profilerFiller,
+            @NotNull ProfilerFiller profilerFiller1,
+            @NotNull Executor executor,
             @NotNull Executor gameExecutor
     ) {
         return barrier.wait(Unit.INSTANCE).thenRunAsync(() -> {

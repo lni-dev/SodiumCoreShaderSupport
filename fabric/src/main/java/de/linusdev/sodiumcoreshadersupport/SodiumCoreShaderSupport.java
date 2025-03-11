@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.profiling.ProfilerFiller;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -25,7 +26,7 @@ public class SodiumCoreShaderSupport implements ClientModInitializer {
                 .registerReloadListener(
                         new SimpleResourceReloadListener<Void>() {
                             @Override
-                            public CompletableFuture<Void> load(ResourceManager manager, Executor executor) {
+                            public CompletableFuture<Void> load(ResourceManager manager, ProfilerFiller profiler, Executor executor) {
                                 return CompletableFuture.supplyAsync(() -> {
                                     reloadShaders(manager);
                                     return null;
@@ -33,7 +34,7 @@ public class SodiumCoreShaderSupport implements ClientModInitializer {
                             }
 
                             @Override
-                            public CompletableFuture<Void> apply(Void data, ResourceManager manager, Executor executor) {
+                            public CompletableFuture<Void> apply(Void data, ResourceManager manager, ProfilerFiller profiler, Executor executor) {
                                 return CompletableFuture.runAsync(() -> {}, executor);
                             }
 

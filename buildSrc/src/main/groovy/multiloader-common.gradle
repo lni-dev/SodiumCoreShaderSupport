@@ -3,14 +3,54 @@ plugins {
     id 'maven-publish'
 }
 
+def sodium_versions = sodium_version.split("-")
+def isSodiumBeta = sodium_versions.length > 2 && sodium_versions[2].contains("beta")
+
+String artefact_mod_version = ""
+String upload_ready_mod_version = ""
+if(!isSodiumBeta) {
+    artefact_mod_version = "mc${minecraft_version}-sodium${sodium_versions[1]}-${project.name}-${project.mod_version}"
+    upload_ready_mod_version = "sodium${sodium_versions[1]}-${project.name}-${project.mod_version}"
+} else {
+    artefact_mod_version = "mc${minecraft_version}-sodium${sodium_versions[1]}${sodium_versions[2]}-${project.name}-${project.mod_version}"
+    upload_ready_mod_version = "sodium${sodium_versions[1]}${sodium_versions[2]}-${project.name}-${project.mod_version}"
+}
+
+def supp_mc_versions = new ArrayList<String>();
+supp_mc_versions.add(minecraft_version)
+
+def scss_release_type = /*isSodiumBeta ? "beta" :*/ "release"
+
+if(!additional_supported_mc_versions.isEmpty()) {
+    def versions = additional_supported_mc_versions.split(",");
+    for (final def v in versions) {
+        supp_mc_versions.add(v)
+    }
+}
+
+ext.upload_ready_mod_version = upload_ready_mod_version
+ext.supp_mc_versions = supp_mc_versions
+ext.scss_release_type = scss_release_type
+
 base {
-    archivesName = "${mod_id}-${project.name}-${minecraft_version}"
+    if(!isSodiumBeta) {
+        archivesName = "${archives_base_name}-${artefact_mod_version}"
+    } else {
+        // Sodium beta
+        archivesName = "${archives_base_name}-${artefact_mod_version}"
+    }
+
 }
 
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(java_version)
     withSourcesJar()
     withJavadocJar()
+}
+
+javadoc {
+    options.encoding = 'UTF-8'
+    options.addStringOption('Xdoclint:none', '-quiet')
 }
 
 repositories {
@@ -83,11 +123,31 @@ jar {
 }
 
 processResources {
+
+    // rotate sodium version to match the version specified in the mod
+    // which differs from the one on maven central
+    def svp = sodium_versions[1] + "+" + sodium_versions[0]
+
+    if(isSodiumBeta)
+        svp = sodium_versions[1] + "-" + sodium_versions[2] + "+" + sodium_versions[0]
+
+    def mcVerArrayFabric = "[ \"" + supp_mc_versions[0] + "\"";
+    for(int i = 1; i < supp_mc_versions.size(); i++)
+        mcVerArrayFabric += ", \"" + supp_mc_versions.get(i) + "\""
+    mcVerArrayFabric += "]"
+
+    // NeoForge version range is really goofy. It must be: https://maven.apache.org/enforcer/enforcer-rules/versionRanges.html
+    def mcVerRangeNeoForge = "[" + supp_mc_versions[0] + "]"
+    for(int i = 1; i < supp_mc_versions.size(); i++)
+        mcVerRangeNeoForge += ",[" + supp_mc_versions.get(i) + "]"
+
+
+
     var expandProps = [
-            'version'                      : version,
+            'version'                      : mod_version,
             'group'                        : project.group, //Else we target the task's group.
-            'minecraft_version'            : minecraft_version,
-            'minecraft_version_range'      : minecraft_version_range,
+            'minecraft_version'            : mcVerArrayFabric,
+            'minecraft_version_range'      : mcVerRangeNeoForge,
             'fabric_version'               : fabric_version,
             'fabric_loader_version'        : fabric_loader_version,
             'mod_name'                     : mod_name,
@@ -101,7 +161,7 @@ processResources {
             "forge_loader_version_range": forge_loader_version_range,
             'credits'                      : credits,
             'java_version'                 : java_version,
-            'sodium_version'               : sodium_version
+            'sodium_version'               : svp
     ]
 
     var jsonExpandProps = expandProps.collectEntries {

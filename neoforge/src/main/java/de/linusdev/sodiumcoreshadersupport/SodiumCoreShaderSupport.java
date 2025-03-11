@@ -1,19 +1,20 @@
 package de.linusdev.sodiumcoreshadersupport;
 
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.Unit;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
-import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 import static de.linusdev.sodiumcoreshadersupport.CommonClass.reloadShaders;
+import static de.linusdev.sodiumcoreshadersupport.Constants.RELOAD_LISTENER_ID;
 
 @Mod(Constants.MOD_ID)
 public class SodiumCoreShaderSupport implements PreparableReloadListener {
@@ -27,8 +28,7 @@ public class SodiumCoreShaderSupport implements PreparableReloadListener {
     }
 
     private static void onRegisterClientReloadListeners(AddClientReloadListenersEvent event) {
-        event.registerReloadListener(INSTANCE);
-
+        event.addListener(RELOAD_LISTENER_ID, INSTANCE);
     }
 
     @Override

@@ -11,6 +11,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 import static de.linusdev.sodiumcoreshadersupport.CommonClass.reloadShaders;
+import static de.linusdev.sodiumcoreshadersupport.Constants.RELOAD_LISTENER_ID;
 
 public class SodiumCoreShaderSupport implements ClientModInitializer {
 
@@ -38,7 +39,7 @@ public class SodiumCoreShaderSupport implements ClientModInitializer {
 
                             @Override
                             public ResourceLocation getFabricId() {
-                                return ResourceLocation.fromNamespaceAndPath("sodiumcoreshadersupport", "shaderloader");
+                                return RELOAD_LISTENER_ID;
                             }
 
                         });

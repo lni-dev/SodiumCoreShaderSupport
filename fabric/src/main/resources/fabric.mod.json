@@ -15,7 +15,7 @@
     "icon": "assets/sodiumcoreshadersupport/icon.png",
     "environment": "*",
     "entrypoints": {
-        "main": [
+        "client": [
             "de.linusdev.sodiumcoreshadersupport.SodiumCoreShaderSupport"
         ]
     },
@@ -26,12 +26,9 @@
     "depends": {
         "fabricloader": ">=${fabric_loader_version}",
         "fabric-api": "*",
-        "minecraft": "~${minecraft_version}",
+        "minecraft": ${minecraft_version},
         "java": ">=${java_version}",
-        "sodium": "${sodium_version}-fabric"
-    },
-    "suggests": {
-        "another-mod": "*"
+        "sodium": "${sodium_version}"
     }
 }
   

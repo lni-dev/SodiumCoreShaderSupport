@@ -1,6 +1,8 @@
 plugins {
     id 'multiloader-loader'
     id 'fabric-loom'
+    id "com.modrinth.minotaur" version "2.+"
+    id 'com.matthewprenger.cursegradle' version '1.+'
 }
 
 repositories {
@@ -45,6 +47,37 @@ loom {
             setConfigName('Fabric Server')
             ideConfigGenerated(true)
             runDir('runs/server')
+        }
+    }
+}
+
+if(project.hasProperty("modrinthToken")) {
+    modrinth {
+        token = modrinthToken // Please use an environment variable for this! The default is `$MODRINTH_TOKEN`.
+        projectId = 'G8yJPRdl' // The ID of your Modrinth project. Slugs will not work.
+        versionNumber = upload_ready_mod_version // The (preferably SemVer) version of the mod. If not specified, it'll use the `version` declaration
+        versionName = 'SodiumCoreShaderSupport' // The version title. If not specified, it'll use the version number
+        uploadFile = remapJar // Tells Minotaur to use the remapped jar
+        gameVersions = supp_mc_versions // An array of game versions the version supports
+        loaders = ['fabric'] // Self-explanatory.
+        versionType = scss_release_type
+        changelog = mod_changelog
+    }
+}
+
+if(project.hasProperty("curseForgeToken")) {
+    curseforge {
+        apiKey = curseForgeToken
+        project {
+            id = '956376'
+            releaseType = scss_release_type
+            changelog = mod_changelog
+            for (final def v in supp_mc_versions)
+                addGameVersion v
+
+            mainArtifact(jar) {
+                displayName = "Sodium Core Shader Support $minecraft_version $upload_ready_mod_version"
+            }
         }
     }
 }

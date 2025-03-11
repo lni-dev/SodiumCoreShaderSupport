@@ -32,7 +32,7 @@ side = "BOTH"
 [[dependencies.${mod_id}]]
 modId="sodium"
 mandatory=true
-versionRange="[${sodium_version}-neoforge,)"
+versionRange="[${sodium_version}]"
 ordering="NONE"
 side="BOTH"
 

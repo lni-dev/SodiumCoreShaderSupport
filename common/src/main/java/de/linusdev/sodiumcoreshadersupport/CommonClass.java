@@ -82,7 +82,9 @@ public class CommonClass {
     }
 
     public static PackSodiumCompReturn isResourcePackCompatible(Pack resProfile) {
-        if(Services.PLATFORM.isModLoaded(Constants.SODIUM_MOD_ID)) {
+        LOG.info("Checking resourcepack compatibility to sodium");
+        if(!Services.PLATFORM.isModLoaded(Constants.SODIUM_MOD_ID)) {
+            LOG.info("Sodium not loaded -> COMPATIBLE");
             return new PackSodiumCompReturn(PackSodiumCompatibility.COMPATIBLE, null, null, null); // sodium is not installed
         }
 
@@ -103,33 +105,40 @@ public class CommonClass {
                 hasShaders.set(true);
             });
 
-            if(!hasShaders.get()) // No shaders in the pack, it is compatible
+            if(!hasShaders.get()) {
+                // No shaders in the pack, it is compatible
+                LOG.info("Pack does not contain shaders -> COMPATIBLE");
                 return new PackSodiumCompReturn(PackSodiumCompatibility.COMPATIBLE, null, null, null);
+            }
+
 
             // Check if pack has versions info
             IoSupplier<InputStream> streamSup = res.getResource(PackType.CLIENT_RESOURCES, ResourceLocation.fromNamespaceAndPath("sodiumcoreshadersupport", "versions.json"));
 
-            if(streamSup == null) // No info, show warning
+            if(streamSup == null) {
+                // No info, show warning
+                LOG.info("Pack does not contain a versions.json -> MISSING_INFORMATION");
                 return new PackSodiumCompReturn(PackSodiumCompatibility.MISSING_INFORMATION, null, null, null);
+            }
 
             // read json
             try(BufferedReader reader = new BufferedReader(new InputStreamReader(streamSup.get(), StandardCharsets.UTF_8))) {
                 JsonElement element = JsonParser.parseReader(reader);
                 if (element == null || !element.isJsonObject()) {
-                    LOG.warn("{} has an invalid versions.json: first element must be json object ({...})", resProfile.getId());
+                    LOG.warn("{} has an invalid versions.json: first element must be json object ({...}) -> MALFORMED_INFORMATION", resProfile.getId());
                     return new PackSodiumCompReturn(PackSodiumCompatibility.MALFORMED_INFORMATION, null, null, null);
                 }
 
                 element = element.getAsJsonObject().get("supported-versions");
 
                 if (element == null || !element.isJsonObject()) {
-                    LOG.warn("{} has an invalid versions.json: missing 'supported-versions' json element", resProfile.getId());
+                    LOG.warn("{} has an invalid versions.json: missing 'supported-versions' json element -> MALFORMED_INFORMATION", resProfile.getId());
                     return new PackSodiumCompReturn(PackSodiumCompatibility.MALFORMED_INFORMATION, null, null, null);
                 }
 
                 for (Map.Entry<String, JsonElement> entry : element.getAsJsonObject().asMap().entrySet()) {
                     if (!entry.getValue().isJsonArray()) {
-                        LOG.warn("{} has an invalid versions.json: sodium versions must be specified as array", resProfile.getId());
+                        LOG.warn("{} has an invalid versions.json: sodium versions must be specified as array -> MALFORMED_INFORMATION", resProfile.getId());
                         return new PackSodiumCompReturn(PackSodiumCompatibility.MALFORMED_INFORMATION, null, null, null);
                     }
 
@@ -138,13 +147,14 @@ public class CommonClass {
                         correctMcVersionIndex = mcVersionIndex;
                         for (JsonElement ele : entry.getValue().getAsJsonArray()) {
                             if (!ele.isJsonPrimitive() || !ele.getAsJsonPrimitive().isString()) {
-                                LOG.warn("{} has an invalid versions.json: sodium versions array mus contain stringsb", resProfile.getId());
+                                LOG.warn("{} has an invalid versions.json: sodium versions array must contain strings -> MALFORMED_INFORMATION", resProfile.getId());
                                 return new PackSodiumCompReturn(PackSodiumCompatibility.MALFORMED_INFORMATION, null, null, null);
                             }
 
                             sodiumVersions.add(ele.getAsJsonPrimitive().getAsString());
                             if (sodiumVersion.equals(ele.getAsJsonPrimitive().getAsString())) {
                                 // match found
+                                LOG.info("pack is COMPATIBLE!");
                                 return new PackSodiumCompReturn(PackSodiumCompatibility.COMPATIBLE, null, null, null);
                             }
                         }
@@ -158,6 +168,7 @@ public class CommonClass {
             throw new RuntimeException(e);
         }
 
+        LOG.info("No version match found -> NOT_COMPATIBLE!");
         return new PackSodiumCompReturn(PackSodiumCompatibility.NOT_COMPATIBLE, sodiumVersions, minecraftVersions, correctMcVersionIndex); // no match found
 
     }

@@ -4,6 +4,10 @@ import de.linusdev.sodiumcoreshadersupport.platform.services.IPlatformHelper;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLLoader;
 
+import java.util.ArrayList;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.stream.Collectors;
+
 public class NeoForgePlatformHelper implements IPlatformHelper {
 
     @Override
@@ -14,7 +18,6 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
 
     @Override
     public boolean isModLoaded(String modId) {
-
         return ModList.get().isLoaded(modId);
     }
 

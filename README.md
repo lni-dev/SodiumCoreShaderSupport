@@ -2,9 +2,8 @@
 
 Enables resourcepacks to replace sodium's shaders, similar to resourcepacks being able to replace vanilla's core shaders.
 If you like my mods then consider supporting the development of my mods by buying me a coffee:
-<br><br>
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/T6T41BS1C9)
 
+[![ko-fi](https://github.com/lni-dev/lni-dev/blob/main/images/support-me-on-ko-fi-mc-banner-smaller.png?raw=true)](https://ko-fi.com/T6T41BS1C9)
 
 ## Documentation for Users
 

@@ -1,4 +1,4 @@
-# SodiumCoreShaderSupport
+# Sodium Core Shader Support
 
 Enables resourcepacks to replace sodium's shaders, similar to resourcepacks being able to replace vanilla's core shaders.
 If you like my mods then consider supporting the development of my mods by buying me a coffee:
@@ -13,9 +13,14 @@ they are compatible with sodium core shader support.
 <br><br>
 If you are using a supported resourcepack you can simply activate it like any other resourcepack.
 
-## List of Resourcepack
-This is a small list of resourcepacks that work on sodium. If you have created a resourcepack yourself feel free to open
-an issue to add it to this list!
+### Resourcepack incompatible
+Sodium may display the message `The following resource packs are incompatible with Sodium` in the top right corner after
+reloading resources and listing your active core
+shaders. This message will always appear, even if the resourcepack supports sodium core shaders and can be ignored.
+
+## List of Resourcepacks
+This is a small list of resourcepacks that work on sodium. If you have created a resourcepack yourself feel free to
+[open an issue on my github](https://github.com/lni-dev/SodiumCoreShaderSupport/issues) to add it to this list!
 - [Energy Shaders \[Java\]](https://modrinth.com/shader/energy-shaders-java)
 - [Night Vision Shaders \[Java\]](https://modrinth.com/shader/night-vision-shaders)
 
@@ -48,7 +53,7 @@ structure mentioned above.
 The `block_layer_opaque` is used for all blocks and block entities. The vanilla minecraft equivalent is `terrain.fsh`
 and `terrain.vsh` (In older versions of minecraft the equivalent is `rendertype_solid`, `rendertype_cutout`, `rendertype_cutout_mipped`, ...).
 
-Additionally, sodium core shader supports adds a few define in the sodium shaders `block_layer_opaque.fsh`
+Additionally, sodium core shader support adds a few define in the sodium shaders `block_layer_opaque.fsh`
 and `block_layer_opaque.vsh` for some terrain-types:
 - `RENDER_PASS_SOLID`: Solid Blocks
 - `RENDER_PASS_CUTOUT`: Blocks like leaves, grass, glass, ...

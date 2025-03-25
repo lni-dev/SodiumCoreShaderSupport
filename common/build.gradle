@@ -33,7 +33,7 @@ dependencies {
     annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
 
     // Mod dependencies
-    compileOnly("maven.modrinth:sodium:${project.sodium_version}-neoforge")
+    compileOnly("maven.modrinth:sodium:${project.sodium_version}-${disable_neoforge == "true" ? "fabric" : "neoforge"}")
 }
 
 configurations {

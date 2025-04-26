@@ -1,4 +1,9 @@
 # Sodium Core Shader Support
+[![Modrinth Downloads](https://img.shields.io/modrinth/dt/G8yJPRdl?logo=modrinth&label=downloads&link=https%3A%2F%2Fmodrinth.com%2Fmod%2Fsodium-core-shader-support)](https://modrinth.com/mod/sodium-core-shader-support)
+[![CurseForge Downloads](https://img.shields.io/curseforge/dt/956376?logo=curseforge&link=https%3A%2F%2Fwww.curseforge.com%2Fminecraft%2Fmc-mods%2Fsodium-core-shader-support)](https://www.curseforge.com/minecraft/mc-mods/sodium-core-shader-support)
+![License](https://img.shields.io/github/license/lni-dev/sodiumcoreshadersupport?color=%23f9af8b)
+![Environment Client](https://img.shields.io/badge/environment-client-blue)
+[![Discord](https://img.shields.io/discord/317290087383826442?label=discord)](https://discord.gg/shVe3cR)
 
 Enables resourcepacks to replace sodium's shaders, similar to resourcepacks being able to replace vanilla's core shaders.
 If you like my mods consider supporting the development by buying me a coffee:

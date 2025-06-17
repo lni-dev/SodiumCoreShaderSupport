@@ -143,7 +143,7 @@ public class CommonClass {
                     }
 
                     minecraftVersions.add(entry.getKey());
-                    if (entry.getKey().equals(currentGameVersion.getName())) {
+                    if (entry.getKey().equals(currentGameVersion.name())) {
                         correctMcVersionIndex = mcVersionIndex;
                         for (JsonElement ele : entry.getValue().getAsJsonArray()) {
                             if (!ele.isJsonPrimitive() || !ele.getAsJsonPrimitive().isString()) {

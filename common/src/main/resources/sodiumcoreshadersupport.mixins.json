@@ -8,6 +8,8 @@
     "MixinChunkShaderOptions",
     "MixinGLProgram",
     "MixinPack",
+    "MixinShaderConstants",
+    "MixinShaderDefines",
     "MixinShaderLoader"
   ],
   "client": [

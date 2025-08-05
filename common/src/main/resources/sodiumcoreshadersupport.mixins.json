@@ -8,12 +8,14 @@
     "MixinChunkShaderOptions",
     "MixinGLProgram",
     "MixinPack",
+    "MixinShaderConstants",
     "MixinShaderLoader"
   ],
   "client": [
     "MixinAbstractPack",
     "MixinPackListWidget",
-    "MixinResourcePackEntry"
+    "MixinResourcePackEntry",
+    "MixinShaderDefines"
   ],
   "server": [],
   "injectors": {

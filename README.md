@@ -58,13 +58,14 @@ structure mentioned above.
 The `block_layer_opaque` is used for all blocks and block entities. The vanilla minecraft equivalent is `terrain.fsh`
 and `terrain.vsh` (In older versions of minecraft the equivalent is `rendertype_solid`, `rendertype_cutout`, `rendertype_cutout_mipped`, ...).
 
-Additionally, sodium core shader support adds a few define in the sodium shaders `block_layer_opaque.fsh`
+Additionally, sodium core shader support adds a few defines in the sodium shaders `block_layer_opaque.fsh`
 and `block_layer_opaque.vsh` for some terrain-types:
 - `RENDER_PASS_SOLID`: Solid Blocks
 - `RENDER_PASS_CUTOUT`: Blocks like leaves, grass, glass, ...
 - `RENDER_PASS_TRANSLUCENT`: Blocks with actual transparency, e.g. water, honey, slime, ...
 
-These can be used like this:
+Furthermore, the define `SODIUM_CORE_SHADER_SUPPORT` will be present in all shaders (mc >= 1.21.2 and version >= 1.3.8).
+These defines can be used like this:
 ```glsl
 #ifdef RENDER_PASS_SOLID
     // special shading for solid stuff

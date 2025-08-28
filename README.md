@@ -28,6 +28,7 @@ This is a small list of resourcepacks that work on sodium. If you have created a
 [open an issue on my github](https://github.com/lni-dev/SodiumCoreShaderSupport/issues) to add it to this list!
 - [Energy Shaders \[Java\]](https://modrinth.com/shader/energy-shaders-java)
 - [Night Vision Shaders \[Java\]](https://modrinth.com/shader/night-vision-shaders)
+- [Fog Remover](https://modrinth.com/resourcepack/fog-remover-1-21-6)
 
 ## Documentation for Shader Developers
 It is important to understand that your vanilla shaders cannot just be copied to sodium shaders. Sodium has their own shaders

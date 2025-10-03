@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static de.linusdev.sodiumcoreshadersupport.CommonClass.isResourcePackCompatible;
@@ -25,7 +26,7 @@ public abstract class MixinResourcePackEntry {
     @Shadow @Final private TransferableSelectionList parent;
 
     @Inject(at = @At("HEAD"), method = "handlePackSelection", cancellable = true)
-    private void enable(CallbackInfoReturnable<Boolean> cir) {
+    private void enable(CallbackInfo ci) {
 
         Pack resProfile = ((MixinAbstractPack) pack).getPack();
 
@@ -64,8 +65,7 @@ public abstract class MixinResourcePackEntry {
                         Component.nullToEmpty("OK")
                 ));
 
-                cir.setReturnValue(false);
-                cir.cancel();
+                ci.cancel();
             }
             case MISSING_INFORMATION -> {
                 this.minecraft.setScreen(new ConfirmScreen(
@@ -80,8 +80,7 @@ public abstract class MixinResourcePackEntry {
 
                 ));
 
-                cir.setReturnValue(false);
-                cir.cancel();
+                ci.cancel();
             }
             case MALFORMED_INFORMATION -> {
                 this.minecraft.setScreen(new ConfirmScreen(
@@ -95,8 +94,7 @@ public abstract class MixinResourcePackEntry {
                         Component.nullToEmpty("This resourcepack contains malformed information about its compatibility (see log). Do you want to enable it anyway?")
                 ));
 
-                cir.setReturnValue(false);
-                cir.cancel();
+                ci.cancel();
             }
         }
     }

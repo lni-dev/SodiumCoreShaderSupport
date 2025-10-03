@@ -10,5 +10,5 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface MixinPackListWidget {
 
     @Accessor(value = "screen")
-    public PackSelectionScreen getScreen();
+    PackSelectionScreen getScreen();
 }

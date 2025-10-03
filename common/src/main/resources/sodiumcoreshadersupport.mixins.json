@@ -5,17 +5,19 @@
   "refmap": "${mod_id}.refmap.json",
   "compatibilityLevel": "JAVA_18",
   "mixins": [
-    "MixinChunkShaderOptions",
-    "MixinGLProgram",
-    "MixinPack",
-    "MixinShaderConstants",
-    "MixinShaderLoader"
+
   ],
   "client": [
     "MixinAbstractPack",
     "MixinPackListWidget",
     "MixinResourcePackEntry",
-    "MixinShaderDefines"
+    "MixinShaderDefines",
+    "MixinDefaultShaderInterface",
+    "MixinChunkShaderOptions",
+    "MixinGLProgram",
+    "MixinPack",
+    "MixinShaderConstants",
+    "MixinShaderLoader"
   ],
   "server": [],
   "injectors": {

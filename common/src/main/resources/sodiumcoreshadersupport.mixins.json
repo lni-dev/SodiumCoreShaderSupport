@@ -4,19 +4,19 @@
   "package": "de.linusdev.sodiumcoreshadersupport.mixin",
   "refmap": "${mod_id}.refmap.json",
   "compatibilityLevel": "JAVA_18",
-  "mixins": [
-    "SharderParserMixin",
-    "MixinChunkShaderOptions",
-    "MixinGLProgram",
-    "MixinPack",
-    "MixinShaderConstants",
-    "MixinShaderLoader"
-  ],
+  "mixins": [],
   "client": [
     "MixinAbstractPack",
     "MixinPackListWidget",
     "MixinResourcePackEntry",
-    "MixinShaderDefines"
+    "MixinShaderDefines",
+    "MixinChunkShaderOptions",
+    "MixinDefaultShaderInterface",
+    "MixinGLProgram",
+    "MixinPack",
+    "MixinShaderConstants",
+    "MixinShaderLoader",
+    "SharderParserMixin"
   ],
   "server": [],
   "injectors": {

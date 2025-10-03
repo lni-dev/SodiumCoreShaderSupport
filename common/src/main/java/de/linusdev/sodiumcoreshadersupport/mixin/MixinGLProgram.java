@@ -23,7 +23,7 @@ public abstract class MixinGLProgram extends GlObject {
      * 
      */
     @Overwrite(remap = false)
-    public <U extends GlUniform<?>> U bindUniform(String name, IntFunction<U> factory) {
+    public <U extends GlUniform<?>> @NotNull U bindUniform(String name, IntFunction<U> factory) {
         int index = GL20C.glGetUniformLocation(this.handle(), name);
 
         if(index < 0) {

@@ -40,6 +40,7 @@ public class MixinShaderLoader {
     public static String getShaderSource(ResourceLocation name) {
 
         if(shaders == null) {
+            // fallback to default getShaderSource
             String path = String.format("/assets/%s/shaders/%s", name.getNamespace(), name.getPath());
 
             try (InputStream in = ShaderLoader.class.getResourceAsStream(path)) {

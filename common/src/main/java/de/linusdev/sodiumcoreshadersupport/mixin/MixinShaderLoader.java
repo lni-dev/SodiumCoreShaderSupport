@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 import static de.linusdev.sodiumcoreshadersupport.CommonClass.shaders;
@@ -37,6 +38,21 @@ public class MixinShaderLoader {
      */
     @Overwrite
     public static String getShaderSource(ResourceLocation name) {
+
+        if(shaders == null) {
+            String path = String.format("/assets/%s/shaders/%s", name.getNamespace(), name.getPath());
+
+            try (InputStream in = ShaderLoader.class.getResourceAsStream(path)) {
+                if (in == null) {
+                    throw new RuntimeException("Shader not found: " + path);
+                } else {
+                    return IOUtils.toString(in, StandardCharsets.UTF_8);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to read shader source for " + path, e);
+            }
+        }
+
         var nameSpace = shaders.get(name.getNamespace());
 
         if(nameSpace == null)

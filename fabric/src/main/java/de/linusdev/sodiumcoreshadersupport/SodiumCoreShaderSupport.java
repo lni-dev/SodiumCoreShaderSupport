@@ -1,14 +1,11 @@
 package de.linusdev.sodiumcoreshadersupport;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
-import net.minecraft.resources.ResourceLocation;
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
+import net.fabricmc.fabric.api.resource.v1.reloader.SimpleResourceReloader;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.resources.ResourceManager;
-
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
+import org.jetbrains.annotations.NotNull;
 
 import static de.linusdev.sodiumcoreshadersupport.CommonClass.reloadShaders;
 import static de.linusdev.sodiumcoreshadersupport.Constants.RELOAD_LISTENER_ID;
@@ -20,28 +17,20 @@ public class SodiumCoreShaderSupport implements ClientModInitializer {
     public void onInitializeClient() {
         CommonClass.init();
 
-        ResourceManagerHelper
-                .get(PackType.CLIENT_RESOURCES)
-                .registerReloadListener(
-                        new SimpleResourceReloadListener<Void>() {
-                            @Override
-                            public CompletableFuture<Void> load(ResourceManager manager, Executor executor) {
-                                return CompletableFuture.supplyAsync(() -> {
-                                    reloadShaders(manager);
-                                    return null;
-                                }, executor);
-                            }
+        ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(
+                Identifier.fromNamespaceAndPath(RELOAD_LISTENER_ID.getNamespace(), RELOAD_LISTENER_ID.getPath()),
+                new SimpleResourceReloader<@NotNull String>() {
+                    @Override
+                    protected String prepare(@NotNull SharedState store) {
+                        reloadShaders(store.resourceManager());
+                        return "";
+                    }
 
-                            @Override
-                            public CompletableFuture<Void> apply(Void data, ResourceManager manager, Executor executor) {
-                                return CompletableFuture.runAsync(() -> {}, executor);
-                            }
+                    @Override
+                    protected void apply(String prepared, @NotNull SharedState store) {
 
-                            @Override
-                            public ResourceLocation getFabricId() {
-                                return RELOAD_LISTENER_ID;
-                            }
-
-                        });
+                    }
+                }
+        );
     }
 }

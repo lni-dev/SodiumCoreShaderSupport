@@ -1,0 +1,22 @@
+{
+  "required": true,
+  "package": "de.linusdev.sodiumcoreshadersupport.mixin.client",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "MixinAbstractPack",
+    "MixinPackListWidget",
+    "MixinResourcePackEntry",
+    "MixinShaderDefines"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "MixinChunkShaderOptions",
+    "MixinDefaultShaderInterface",
+    "MixinPack",
+    "MixinShaderConstants",
+    "MixinShaderLoader",
+    "SharderParserMixin"
+  ]
+}

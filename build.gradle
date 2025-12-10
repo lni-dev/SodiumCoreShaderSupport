@@ -1,6 +1,154 @@
 plugins {
-    // see https://fabricmc.net/develop/ for new versions
-    id 'fabric-loom' version '1.14-SNAPSHOT' apply false
-    // see https://projects.neoforged.net/neoforged/moddevgradle for new versions
-    id 'net.neoforged.moddev' version '2.0.116' apply false
+	id 'net.fabricmc.fabric-loom-remap' version "${loom_version}"
+	id 'maven-publish'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+def sodium_versions = sodium_version.split("-")
+def isSodiumBeta = sodium_versions.length > 2 && sodium_versions[2].contains("beta")
+
+String artefact_mod_version = ""
+String upload_ready_mod_version = ""
+if(!isSodiumBeta) {
+    artefact_mod_version = "${project.mod_version}-mc${minecraft_version}-sodium${sodium_versions[1]}-${project.name}"
+    upload_ready_mod_version = "${project.mod_version}-sodium${sodium_versions[1]}-${project.name}"
+} else {
+    artefact_mod_version = "${project.mod_version}-mc${minecraft_version}-sodium${sodium_versions[1]}${sodium_versions[2]}-${project.name}"
+    upload_ready_mod_version = "${project.mod_version}-sodium${sodium_versions[1]}${sodium_versions[2]}-${project.name}"
+}
+
+def supp_mc_versions = new ArrayList<String>();
+supp_mc_versions.add(minecraft_version)
+
+def scss_release_type = /*isSodiumBeta ? "beta" :*/ "release"
+
+if(!additional_supported_mc_versions.isEmpty()) {
+    def versions = additional_supported_mc_versions.split(",");
+    for (final def v in versions) {
+        supp_mc_versions.add(v)
+    }
+}
+
+base {
+    if(!isSodiumBeta) {
+        archivesName = "${archives_base_name}-${artefact_mod_version}"
+    } else {
+        // Sodium beta
+        archivesName = "${archives_base_name}-${artefact_mod_version}"
+    }
+}
+
+repositories {
+	// Add repositories to retrieve artifacts from in here.
+	// You should only use this when depending on other mods because
+	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
+	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
+	// for more information about repositories.
+
+    maven {
+        name = 'Fabric'
+        url = uri('https://maven.fabricmc.net')
+    }
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+        content {
+            includeGroup "maven.modrinth"
+        }
+    }
+    mavenCentral()
+}
+
+loom {
+	splitEnvironmentSourceSets()
+
+	mods {
+		"sodiumcoreshadersupport" {
+			sourceSet sourceSets.main
+			sourceSet sourceSets.client
+		}
+	}
+
+}
+
+dependencies {
+	// To change the versions see the gradle.properties file
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings loom.officialMojangMappings()
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+	// Fabric API. This is technically optional, but you probably want it anyway.
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    modImplementation("maven.modrinth:sodium:${project.sodium_version}-fabric")
+}
+
+processResources {
+	inputs.property "version", project.version
+    inputs.property "java_version", java_version
+    inputs.property "loader_version", loader_version
+    inputs.property "minecraft_version", minecraft_version
+    inputs.property "additional_mc_versions", additional_supported_mc_versions
+    inputs.property "sodium_version", sodium_version
+
+    // rotate sodium version to match the version specified in the mod
+    // which differs from the one on maven central
+    def svp = sodium_versions[1] + "+" + sodium_versions[0]
+
+    if(isSodiumBeta)
+        svp = sodium_versions[1] + "-" + sodium_versions[2] + "+" + sodium_versions[0]
+
+    def mcVerArrayFabric = "[ \"" + supp_mc_versions[0] + "\"";
+    for(int i = 1; i < supp_mc_versions.size(); i++)
+        mcVerArrayFabric += ", \"" + supp_mc_versions.get(i) + "\""
+    mcVerArrayFabric += "]"
+
+	filesMatching("fabric.mod.json") {
+		expand "version": inputs.properties.version,
+               "java_version": java_version,
+               "minecraft_version": mcVerArrayFabric,
+               "loader_version": loader_version,
+               "sodium_version": svp
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 21
+}
+
+java {
+	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+	// if it is present.
+	// If you remove this line, sources will not be generated.
+	withSourcesJar()
+
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
+}
+
+jar {
+	inputs.property "archivesName", project.base.archivesName
+
+	from("LICENSE") {
+		rename { "${it}_${inputs.properties.archivesName}"}
+	}
+}
+
+// configure the maven publication
+publishing {
+	publications {
+		create("mavenJava", MavenPublication) {
+			artifactId = project.archives_base_name
+			from components.java
+		}
+	}
+
+	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+	repositories {
+		// Add repositories to publish to here.
+		// Notice: This block does NOT have the same function as the block in the top level.
+		// The repositories here will be used for publishing your artifact, not for
+		// retrieving dependencies.
+	}
 }

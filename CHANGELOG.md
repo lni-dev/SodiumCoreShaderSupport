@@ -1,3 +1,3 @@
 - updated to sodium 0.8.0
 - updated to minecraft 1.21.11
-- neoforge is no longer supported
+- neoforge support has been removed and will likely not come back (Due to recurring compile problems)

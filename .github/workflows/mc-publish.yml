@@ -1,0 +1,80 @@
+
+
+name: Publish on CurseForge & Modrinth
+
+on: [ workflow_dispatch ]
+
+env:
+  MODRINTH_TOKEN: ${{ secrets.PUBLISH_MODRINTH_TOKEN }}
+  CURSEFORGE_TOKEN: ${{ secrets.PUBLISH_CURSEFORGE_TOKEN }}
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Environment Variables
+        run: env
+
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Read gradle.properties
+        uses: BrycensRanch/read-properties-action@v1.0.4
+        id: props
+        with:
+          file: gradle.properties
+          all: true
+
+      - name: Format versions for matrix
+        id: versions
+        run: |
+          # --- Extract Additional Supported versions in the right format ---
+          echo "GAME_VERSIONS<<EOF" >> $GITHUB_OUTPUT
+          echo "${{ steps.props.outputs.additional_supported_mc_versions }}" | tr ',' '\n' >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          
+          # --- Extract sodium version (the part after "-") ---
+          sodium_full="${{ steps.props.outputs.sodium_version }}"
+          sodium_version="${sodium_full#*-}"
+          echo "SODIUM_VERSION=$sodium_version" >> $GITHUB_OUTPUT
+
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: "temurin"
+          java-version: 21
+
+      - name: Make Gradle Wrapper Executable
+        if: ${{ runner.os != 'Windows' }}
+        run: chmod +x ./gradlew
+
+      - name: Build
+        run: ./gradlew clean build
+
+      - name: Publish (CurseForge/Modrinth/GitHub)
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          curseforge-id: 956376
+          curseforge-token: "${{env.CURSEFORGE_TOKEN}}"
+
+          modrinth-id: G8yJPRdl
+          modrinth-token: "${{env.MODRINTH_TOKEN}}"
+
+          name: "SodiumCoreShaderSupport ${{ steps.props.outputs.mod_version }}"
+          version: "${{ steps.props.outputs.mod_version }}-sodium${{steps.versions.outputs.SODIUM_VERSION}}-fabric"
+          version-type: release
+          changelog-file: CHANGELOG.md
+
+          loaders: fabric
+          game-versions: |
+            ${{ steps.props.outputs.minecraft_version }}
+            ${{ steps.versions.outputs.GAME_VERSIONS }}
+          java: "21"
+          dependencies: |
+            sodium(recommended){modrinth:AANobbMI}{curseforge:394468}
+

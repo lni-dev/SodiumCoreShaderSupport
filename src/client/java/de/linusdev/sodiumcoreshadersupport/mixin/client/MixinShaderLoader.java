@@ -38,6 +38,7 @@ public class MixinShaderLoader {
     public static String getShaderSource(Identifier name) {
 
         if(shaders == null) {
+            LOG.warn("Trying to load shaders, but shaders variable not yet initialised");
             // fallback to default getShaderSource
             String path = String.format("/assets/%s/shaders/%s", name.getNamespace(), name.getPath());
 

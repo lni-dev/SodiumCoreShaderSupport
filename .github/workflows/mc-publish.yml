@@ -64,6 +64,8 @@ jobs:
 
           modrinth-id: G8yJPRdl
           modrinth-token: "${{env.MODRINTH_TOKEN}}"
+          modrinth-featured: false
+          modrinth-unfeature-mode: none
 
           name: "SodiumCoreShaderSupport ${{ steps.props.outputs.mod_version }}"
           version: "${{ steps.props.outputs.mod_version }}-sodium${{steps.versions.outputs.SODIUM_VERSION}}-fabric"

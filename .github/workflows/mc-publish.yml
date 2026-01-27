@@ -67,7 +67,7 @@ jobs:
           modrinth-featured: false
           modrinth-unfeature-mode: none
 
-          name: "SodiumCoreShaderSupport ${{ steps.props.outputs.mod_version }}"
+          name: "${{ steps.props.outputs.mod_version }}-sodium${{steps.versions.outputs.SODIUM_VERSION}}-fabric"
           version: "${{ steps.props.outputs.mod_version }}-sodium${{steps.versions.outputs.SODIUM_VERSION}}-fabric"
           version-type: release
           changelog-file: CHANGELOG.md

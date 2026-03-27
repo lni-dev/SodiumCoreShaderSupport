@@ -5,7 +5,7 @@ import com.google.gson.JsonParser;
 import de.linusdev.sodiumcoreshadersupport.mixin.client.MixinPack;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
-import net.fabricmc.fabric.api.resource.v1.reloader.SimpleResourceReloader;
+import net.fabricmc.fabric.api.resource.v1.reloader.SimpleReloadListener;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.SharedConstants;
 import net.minecraft.WorldVersion;
@@ -33,9 +33,9 @@ import static de.linusdev.sodiumcoreshadersupport.Constants.RELOAD_LISTENER_ID;
 public class SodiumCoreShaderSupportClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
-        ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(
+        ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(
                 Identifier.fromNamespaceAndPath(RELOAD_LISTENER_ID.getNamespace(), RELOAD_LISTENER_ID.getPath()),
-                new SimpleResourceReloader<@NotNull String>() {
+                new SimpleReloadListener<@NotNull String>() {
                     @Override
                     protected String prepare(@NotNull SharedState store) {
                         reloadShaders(store.resourceManager());

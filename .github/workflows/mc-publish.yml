@@ -47,7 +47,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           distribution: "temurin"
-          java-version: 21
+          java-version: 25
 
       - name: Make Gradle Wrapper Executable
         if: ${{ runner.os != 'Windows' }}
@@ -76,7 +76,7 @@ jobs:
           game-versions: |
             ${{ steps.props.outputs.minecraft_version }}
             ${{ steps.versions.outputs.GAME_VERSIONS }}
-          java: "21"
+          java: "25"
           dependencies: |
             sodium(recommended){modrinth:AANobbMI}{curseforge:394468}
 

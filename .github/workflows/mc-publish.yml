@@ -56,7 +56,7 @@ jobs:
       - name: Build
         run: ./gradlew clean build
 
-      - name: Publish (CurseForge/Modrinth/GitHub)
+      - name: Publish (CurseForge/Modrinth)
         uses: Kir-Antipov/mc-publish@v3.3
         with:
           curseforge-id: 956376
@@ -68,7 +68,8 @@ jobs:
           modrinth-unfeature-mode: none
 
           name: "${{ steps.props.outputs.mod_version }}-sodium${{steps.versions.outputs.SODIUM_VERSION}}-fabric-mc${{ steps.props.outputs.minecraft_version }}"
-          version: "${{ steps.props.outputs.mod_version }}-sodium${{steps.versions.outputs.SODIUM_VERSION}}-fabric-mc${{ steps.props.outputs.minecraft_version }}"
+          version: "${{ steps.props.outputs.mod_version }}-sod${{steps.versions.outputs.SODIUM_VERSION}}-fab${{ steps.props.outputs.minecraft_version }}"
+
           version-type: release
           changelog-file: CHANGELOG.md
 

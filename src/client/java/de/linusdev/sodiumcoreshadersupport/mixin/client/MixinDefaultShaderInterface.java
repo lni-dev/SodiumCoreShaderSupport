@@ -10,6 +10,7 @@ import net.caffeinemc.mods.sodium.client.util.FogParameters;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.Mth;
 import net.minecraft.world.attribute.EnvironmentAttributeProbe;
 import net.minecraft.world.attribute.EnvironmentAttributes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -57,7 +58,7 @@ public abstract class MixinDefaultShaderInterface {
             if(minecraft.level != null && camera != null && camera.isInitialized()) {
                 EnvironmentAttributeProbe probe = camera.attributeProbe();
                 if(probe != null) {
-                    sunAngle = probe.getValue(EnvironmentAttributes.SUN_ANGLE, partialTick) * 0.017453292F;
+                    sunAngle = probe.getValue(EnvironmentAttributes.SUN_ANGLE, partialTick) * Mth.DEG_TO_RAD;
                 }
             }
             sodiumCoreShaderSupport$uniformSunAngle.set(sunAngle);

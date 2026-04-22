@@ -7,8 +7,11 @@ import net.caffeinemc.mods.sodium.client.render.chunk.shader.DefaultShaderInterf
 import net.caffeinemc.mods.sodium.client.render.chunk.shader.ShaderBindingContext;
 import net.caffeinemc.mods.sodium.client.render.chunk.terrain.TerrainRenderPass;
 import net.caffeinemc.mods.sodium.client.util.FogParameters;
+import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.attribute.EnvironmentAttributeProbe;
+import net.minecraft.world.attribute.EnvironmentAttributes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -21,6 +24,9 @@ public abstract class MixinDefaultShaderInterface {
     @Unique
     private GlUniformFloat sodiumCoreShaderSupport$uniformGameTime = null;
 
+    @Unique
+    private GlUniformFloat sodiumCoreShaderSupport$uniformSunAngle = null;
+
     @Inject(
             at = @At(
                     value = "INVOKE",
@@ -32,6 +38,7 @@ public abstract class MixinDefaultShaderInterface {
     )
     private void injectConstructor(ShaderBindingContext context, ChunkShaderOptions options, CallbackInfo ci) {
         sodiumCoreShaderSupport$uniformGameTime = context.bindUniformOptional("u_GameTime", GlUniformFloat::new);
+        sodiumCoreShaderSupport$uniformSunAngle = context.bindUniformOptional("u_SunAngle", GlUniformFloat::new);
     }
 
     @Inject(at = @At("RETURN"), method = "setupState", remap = false)
@@ -39,10 +46,22 @@ public abstract class MixinDefaultShaderInterface {
         Minecraft minecraft = Minecraft.getInstance();
         long time = minecraft.level == null ? 0L : minecraft.level.getGameTime();
         DeltaTracker deltaTracker = minecraft.getDeltaTracker();
+        float partialTick = deltaTracker.getGameTimeDeltaPartialTick(false);
         if(sodiumCoreShaderSupport$uniformGameTime != null)
             sodiumCoreShaderSupport$uniformGameTime.set(
-                    ((float)(time % 24000L) + deltaTracker.getGameTimeDeltaPartialTick(false)) / 24000.0F
+                    ((float)(time % 24000L) + partialTick) / 24000.0F
             );
+        if(sodiumCoreShaderSupport$uniformSunAngle != null) {
+            float sunAngle = 0.0F;
+            Camera camera = minecraft.gameRenderer.getMainCamera();
+            if(minecraft.level != null && camera != null && camera.isInitialized()) {
+                EnvironmentAttributeProbe probe = camera.attributeProbe();
+                if(probe != null) {
+                    sunAngle = probe.getValue(EnvironmentAttributes.SUN_ANGLE, partialTick) * 0.017453292F;
+                }
+            }
+            sodiumCoreShaderSupport$uniformSunAngle.set(sunAngle);
+        }
     }
 
 }

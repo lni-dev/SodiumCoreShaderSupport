@@ -80,6 +80,13 @@ and `block_layer_opaque.vsh`. It can be used just like the vanilla GameTime unif
 uniform float u_GameTime;
 ```
 
+#### SunAngle Uniform
+As of Sodium Core Shader Support version 1.5.0 the `u_SunAngle` uniform will be present in `block_layer_opaque.fsh`
+and `block_layer_opaque.vsh` as well. It returns the sun angle from environmental attributes in radians. Add it to your shaders using:
+```glsl
+uniform float u_SunAngle;
+```
+
 ### How to specify which sodium versions are supported
 The sodium devs will change their internal shaders and shader related code without further notice. That's why it is
 important that you specify with which versions of sodium and minecraft your pack is compatible. This can be done in a special

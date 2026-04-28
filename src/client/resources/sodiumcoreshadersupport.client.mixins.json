@@ -18,6 +18,8 @@
     "MixinPack",
     "MixinShaderConstants",
     "MixinShaderLoader",
-    "SharderParserMixin"
+    "SharderParserMixin",
+    "MixinDefaultChunkRenderer",
+    "MixinViewport"
   ]
 }

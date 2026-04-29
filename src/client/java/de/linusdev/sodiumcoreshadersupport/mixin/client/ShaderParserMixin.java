@@ -13,7 +13,7 @@ import java.util.List;
 import static de.linusdev.sodiumcoreshadersupport.Constants.LOG;
 
 @Mixin(ShaderParser.class)
-public class SharderParserMixin {
+public class ShaderParserMixin {
     @Shadow
     @Final
     private List<String> lines;

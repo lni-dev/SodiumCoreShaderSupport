@@ -17,6 +17,7 @@ import net.minecraft.server.packs.resources.IoSupplier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -38,7 +39,8 @@ public class SodiumCoreShaderSupportClient implements ClientModInitializer {
                 Identifier.fromNamespaceAndPath(RELOAD_LISTENER_ID.getNamespace(), RELOAD_LISTENER_ID.getPath()),
                 new SimpleResourceReloader<@NotNull String>() {
                     @Override
-                    protected String prepare(@NotNull SharedState store) {
+                    protected @NonNull String prepare(@NotNull SharedState store) {
+                        reloadCullingConfig(store.resourceManager());
                         reloadShaders(store.resourceManager());
                         return "";
                     }
@@ -55,7 +57,6 @@ public class SodiumCoreShaderSupportClient implements ClientModInitializer {
 
     public static void reloadShaders(@NotNull ResourceManager manager) {
         Constants.LOG.info("Loading shaders...");
-        reloadCullingConfig(manager);
         shaders = new HashMap<>();
 
         manager.listResourceStacks("shaders", path -> true).forEach((identifier, resources) -> {

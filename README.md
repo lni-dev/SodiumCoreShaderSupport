@@ -122,3 +122,10 @@ With this trick you can create custom glsl files, which you can `#import` in you
 These files, should contain your main shader "logic". An example shaderpack, which
 works with this trick on both vanilla and sodium, can be found [here](https://github.com/lni-dev/MinecraftShaders/tree/master/EnergyShaders%20%5BJava%5D/current/Energy%20Shaders%20%5BJava%5D/assets).
 
+### Disable Culling
+TODO
+
+## Credits
+Thanks to [MR-CHOO](https://github.com/MR-CHOO) for adding the [SunAngle Uniform](#sunangle-uniform) and the option 
+[to disable frustum and backface culling](#disable-culling)
+

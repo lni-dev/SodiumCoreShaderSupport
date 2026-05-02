@@ -123,7 +123,17 @@ These files, should contain your main shader "logic". An example shaderpack, whi
 works with this trick on both vanilla and sodium, can be found [here](https://github.com/lni-dev/MinecraftShaders/tree/master/EnergyShaders%20%5BJava%5D/current/Energy%20Shaders%20%5BJava%5D/assets).
 
 ### Disable Culling
-Documentation coming soon!
+Since version 1.5.0, sodium's frustum and backface culling can be disabled via `versions.json`. This is useful for any core shader that requires offscreen geometry, or that aims to transform the view in `block.vsh` to show geometry not typically on screen (e.g. shadows, alternate player POVs, etc.)
+
+```json
+{
+  "supported-versions": { "1.21.11": ["0.8.7+mc1.21.11"] },
+  "disable-frustum-culling": true,
+  "disable-backface-culling": true
+}
+```
+
+---
 
 ## Credits
 Thanks to [MR-CHOO](https://github.com/MR-CHOO) for adding the [SunAngle Uniform](#sunangle-uniform) and the option 

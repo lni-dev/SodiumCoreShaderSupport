@@ -12,12 +12,14 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "MixinChunkShaderOptions",
     "MixinDefaultShaderInterface",
+    "MixinShaderChunkRenderer",
     "MixinGLProgram",
     "MixinPack",
     "MixinShaderConstants",
     "MixinShaderLoader",
-    "SharderParserMixin"
+    "ShaderParserMixin",
+    "MixinDefaultChunkRenderer",
+    "MixinViewport"
   ]
 }

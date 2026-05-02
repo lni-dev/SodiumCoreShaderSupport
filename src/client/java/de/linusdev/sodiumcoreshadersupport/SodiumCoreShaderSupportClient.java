@@ -1,6 +1,7 @@
 package de.linusdev.sodiumcoreshadersupport;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import de.linusdev.sodiumcoreshadersupport.mixin.client.MixinPack;
 import net.fabricmc.api.ClientModInitializer;
@@ -16,6 +17,7 @@ import net.minecraft.server.packs.resources.IoSupplier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,7 +39,8 @@ public class SodiumCoreShaderSupportClient implements ClientModInitializer {
                 Identifier.fromNamespaceAndPath(RELOAD_LISTENER_ID.getNamespace(), RELOAD_LISTENER_ID.getPath()),
                 new SimpleReloadListener<@NotNull String>() {
                     @Override
-                    protected String prepare(@NotNull SharedState store) {
+                    protected @NonNull String prepare(@NotNull SharedState store) {
+                        reloadCullingConfig(store.resourceManager());
                         reloadShaders(store.resourceManager());
                         return "";
                     }
@@ -167,5 +170,37 @@ public class SodiumCoreShaderSupportClient implements ClientModInitializer {
         Constants.LOG.info("No version match found -> NOT_COMPATIBLE!");
         return new PackSodiumCompReturn(PackSodiumCompatibility.NOT_COMPATIBLE, sodiumVersions, minecraftVersions, correctMcVersionIndex); // no match found
 
+    }
+
+    private static final Identifier CULLING_CONFIG_ID = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "versions.json");
+
+    public static void reloadCullingConfig(@NotNull ResourceManager manager) {
+        boolean disableFrustum = false;
+        boolean disableBackface = false;
+
+        var resourceOpt = manager.getResource(CULLING_CONFIG_ID);
+        if (resourceOpt.isPresent()) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(resourceOpt.get().open(), StandardCharsets.UTF_8))) {
+                JsonElement parsed = JsonParser.parseReader(reader);
+                if (parsed != null && parsed.isJsonObject()) {
+                    JsonObject obj = parsed.getAsJsonObject();
+                    disableFrustum = readBool(obj, "disable-frustum-culling", false);
+                    disableBackface = readBool(obj, "disable-backface-culling", false);
+                }
+            } catch (Exception e) {
+                Constants.LOG.warn("Failed to read culling flags from {}: {}", CULLING_CONFIG_ID, e.toString());
+            }
+        }
+
+        CullingConfig.disableFrustumCulling = disableFrustum;
+        CullingConfig.disableBackfaceCulling = disableBackface;
+    }
+
+    private static boolean readBool(JsonObject obj, String key, boolean fallback) {
+        JsonElement el = obj.get(key);
+        if (el != null && el.isJsonPrimitive() && el.getAsJsonPrimitive().isBoolean()) {
+            return el.getAsBoolean();
+        }
+        return fallback;
     }
 }

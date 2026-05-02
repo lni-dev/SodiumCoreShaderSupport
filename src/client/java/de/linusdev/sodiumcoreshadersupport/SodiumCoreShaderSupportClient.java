@@ -13,9 +13,8 @@ import net.minecraft.WorldVersion;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
-import net.minecraft.server.packs.resources.IoSupplier;
-import net.minecraft.server.packs.resources.Resource;
-import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.*;
+import net.minecraft.util.profiling.ProfilerFiller;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
@@ -28,30 +27,31 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static de.linusdev.sodiumcoreshadersupport.Constants.RELOAD_LISTENER_ID;
 
 public class SodiumCoreShaderSupportClient implements ClientModInitializer {
-	@Override
-	public void onInitializeClient() {
+    @Override
+    public void onInitializeClient() {
         ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(
                 Identifier.fromNamespaceAndPath(RELOAD_LISTENER_ID.getNamespace(), RELOAD_LISTENER_ID.getPath()),
-                new SimpleReloadListener<@NotNull String>() {
+                new SimplePreparableReloadListener<Void>() {
                     @Override
-                    protected @NonNull String prepare(@NotNull SharedState store) {
-                        reloadCullingConfig(store.resourceManager());
-                        reloadShaders(store.resourceManager());
-                        return "";
+                    protected Void prepare(@NonNull ResourceManager resourceManager, @NonNull ProfilerFiller profilerFiller) {
+                        reloadCullingConfig(resourceManager);
+                        reloadShaders(resourceManager);
+                        return null;
                     }
 
                     @Override
-                    protected void apply(String prepared, @NotNull SharedState store) {
-
+                    protected void apply(Void obj, ResourceManager resourceManager, ProfilerFiller profilerFiller) {
                     }
                 }
         );
-	}
+    }
 
     public static Map<String, Map<String, Resource>> shaders;
 

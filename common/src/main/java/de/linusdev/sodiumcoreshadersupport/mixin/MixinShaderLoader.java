@@ -5,7 +5,7 @@ import net.caffeinemc.mods.sodium.client.gl.shader.GlShader;
 import net.caffeinemc.mods.sodium.client.gl.shader.ShaderConstants;
 import net.caffeinemc.mods.sodium.client.gl.shader.ShaderLoader;
 import net.caffeinemc.mods.sodium.client.gl.shader.ShaderType;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.apache.commons.io.IOUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -26,7 +26,7 @@ public class MixinShaderLoader {
     @Inject(at = @At("HEAD"), method = "loadShader")
     private static void loadShaderInject(
             ShaderType type,
-            ResourceLocation name,
+            Identifier name,
             ShaderConstants constants, CallbackInfoReturnable<GlShader> cir
     ) {
         LOG.info("Start loading shader in namespace '"  + name.getNamespace() + "': " + name.getPath());
@@ -37,7 +37,7 @@ public class MixinShaderLoader {
      * @reason Load shaders from resources, loaded by then ResourceManager instead of reading them as java resource.
      */
     @Overwrite
-    public static String getShaderSource(ResourceLocation name) {
+    public static String getShaderSource(Identifier name) {
 
         if(shaders == null) {
             // fallback to default getShaderSource

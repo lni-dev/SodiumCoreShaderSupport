@@ -48,4 +48,6 @@ plugins {
 rootProject.name = 'Sodium Core Shader Support'
 include('common')
 include('fabric')
-include('neoforge')
+if (!providers.gradleProperty('disable_neoforge').map { it.toBoolean() }.orElse(false).get()) {
+    include('neoforge')
+}

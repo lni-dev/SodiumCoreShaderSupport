@@ -7,7 +7,7 @@ import de.linusdev.sodiumcoreshadersupport.platform.Services;
 import net.minecraft.SharedConstants;
 import net.minecraft.WorldVersion;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.resources.IoSupplier;
@@ -113,7 +113,7 @@ public class CommonClass {
 
 
             // Check if pack has versions info
-            IoSupplier<InputStream> streamSup = res.getResource(PackType.CLIENT_RESOURCES, ResourceLocation.fromNamespaceAndPath("sodiumcoreshadersupport", "versions.json"));
+            IoSupplier<InputStream> streamSup = res.getResource(PackType.CLIENT_RESOURCES, Identifier.fromNamespaceAndPath("sodiumcoreshadersupport", "versions.json"));
 
             if(streamSup == null) {
                 // No info, show warning

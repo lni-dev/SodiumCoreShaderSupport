@@ -133,8 +133,6 @@ Since version 1.5.0, sodium's frustum and backface culling can be disabled via `
 }
 ```
 
----
-
 ## Credits
 Thanks to [MR-CHOO](https://github.com/MR-CHOO) for adding the [SunAngle Uniform](#sunangle-uniform) and the option 
 [to disable frustum and backface culling](#disable-culling)!

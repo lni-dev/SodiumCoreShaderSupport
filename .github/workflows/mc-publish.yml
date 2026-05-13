@@ -41,6 +41,10 @@ jobs:
           # --- Extract sodium version (the part after "-") ---
           sodium_full="${{ steps.props.outputs.sodium_version }}"
           sodium_version="${sodium_full#*-}"
+          
+          # Replace "beta" with "b"
+          sodium_version="${sodium_version//beta/b}"
+          
           echo "SODIUM_VERSION=$sodium_version" >> $GITHUB_OUTPUT
 
       - name: Setup Java

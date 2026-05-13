@@ -45,6 +45,9 @@ jobs:
           # Replace "beta" with "b"
           sodium_version="${sodium_version//beta/b}"
           
+          # Print to action log
+          echo "Resolved SODIUM_VERSION: $sodium_version"
+          
           echo "SODIUM_VERSION=$sodium_version" >> $GITHUB_OUTPUT
 
       - name: Setup Java

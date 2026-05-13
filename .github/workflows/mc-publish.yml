@@ -37,13 +37,17 @@ jobs:
           echo "GAME_VERSIONS<<EOF" >> $GITHUB_OUTPUT
           echo "${{ steps.props.outputs.additional_supported_mc_versions }}" | tr ',' '\n' >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
+        
+          # --- Extract sodium version (the part after "-") ---
+          sodium_full="${{ steps.props.outputs.sodium_version }}"
+          sodium_version="${sodium_full#*-}"
           
           # Replace "beta" with "b"
           sodium_version="${sodium_version//beta/b}"
           
-          # --- Extract sodium version (the part after "-") ---
-          sodium_full="${{ steps.props.outputs.sodium_version }}"
-          sodium_version="${sodium_full#*-}"
+          # Print to action log
+          echo "Resolved SODIUM_VERSION: $sodium_version"
+          
           echo "SODIUM_VERSION=$sodium_version" >> $GITHUB_OUTPUT
 
       - name: Setup Java

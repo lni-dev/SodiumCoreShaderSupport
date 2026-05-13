@@ -38,6 +38,9 @@ jobs:
           echo "${{ steps.props.outputs.additional_supported_mc_versions }}" | tr ',' '\n' >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
           
+          # Replace "beta" with "b"
+          sodium_version="${sodium_version//beta/b}"
+          
           # --- Extract sodium version (the part after "-") ---
           sodium_full="${{ steps.props.outputs.sodium_version }}"
           sodium_version="${sodium_full#*-}"

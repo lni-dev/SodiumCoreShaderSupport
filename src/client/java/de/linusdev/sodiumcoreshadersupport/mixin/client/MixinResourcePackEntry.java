@@ -52,9 +52,9 @@ public abstract class MixinResourcePackEntry {
                     );
                 }
 
-                this.minecraft.setScreen(new ConfirmScreen(
+                this.minecraft.setScreenAndShow(new ConfirmScreen(
                         confirmed -> {
-                            this.minecraft.setScreen(((MixinPackListWidget) this.parent).getScreen());
+                            this.minecraft.setScreenAndShow(((MixinPackListWidget) this.parent).getScreen());
                             if (confirmed) {
                                 this.pack.select();
                             }
@@ -68,9 +68,9 @@ public abstract class MixinResourcePackEntry {
                 ci.cancel();
             }
             case MISSING_INFORMATION -> {
-                this.minecraft.setScreen(new ConfirmScreen(
+                this.minecraft.setScreenAndShow(new ConfirmScreen(
                         confirmed -> {
-                            this.minecraft.setScreen(((MixinPackListWidget) this.parent).getScreen());
+                            this.minecraft.setScreenAndShow(((MixinPackListWidget) this.parent).getScreen());
                             if (confirmed) {
                                 this.pack.select();
                             }
@@ -83,9 +83,9 @@ public abstract class MixinResourcePackEntry {
                 ci.cancel();
             }
             case MALFORMED_INFORMATION -> {
-                this.minecraft.setScreen(new ConfirmScreen(
+                this.minecraft.setScreenAndShow(new ConfirmScreen(
                         confirmed -> {
-                            this.minecraft.setScreen(((MixinPackListWidget) this.parent).getScreen());
+                            this.minecraft.setScreenAndShow(((MixinPackListWidget) this.parent).getScreen());
                             if (confirmed) {
                                 this.pack.select();
                             }

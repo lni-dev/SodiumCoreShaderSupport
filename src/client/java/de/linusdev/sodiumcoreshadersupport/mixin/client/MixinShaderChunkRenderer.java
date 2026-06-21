@@ -1,48 +1,54 @@
 package de.linusdev.sodiumcoreshadersupport.mixin.client;
 
-import net.caffeinemc.mods.sodium.client.gl.shader.ShaderConstants;
+import com.mojang.blaze3d.pipeline.BindGroupLayout;
+import com.mojang.blaze3d.shaders.UniformType;
 import net.caffeinemc.mods.sodium.client.render.chunk.ShaderChunkRenderer;
-import net.caffeinemc.mods.sodium.client.render.chunk.shader.ChunkShaderOptions;
 import net.caffeinemc.mods.sodium.client.render.chunk.terrain.DefaultTerrainRenderPasses;
 import net.caffeinemc.mods.sodium.client.render.chunk.terrain.TerrainRenderPass;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-/*
- * As of Sodium mc1.21.11-0.8.7, ShaderChunkRenderer#createShader no longer calls
- * ChunkShaderOptions#constants() and instead builds defines through this private
- * static helper. The previous MixinChunkShaderOptions @Overwrite of
- * ChunkShaderOptions#constants() is dead code on this version — we have to
- * intercept here instead so RENDER_PASS_* defines actually reach the compiler.
- */
+import java.util.List;
+
 @Mixin(ShaderChunkRenderer.class)
 public abstract class MixinShaderChunkRenderer {
 
-    /**
-     * @author linusdev
-     * @reason added defines for different render passes (Sodium 0.8.7 moved the
-     *         constants assembly out of ChunkShaderOptions into this class)
-     */
-    @Overwrite(remap = false)
-    private static ShaderConstants createShaderConstants(ChunkShaderOptions options) {
-        ShaderConstants.Builder builder = ShaderConstants.builder();
-        builder.addAll(options.fog().getDefines());
+    @Redirect(
+            method = "<clinit>",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lcom/mojang/blaze3d/pipeline/BindGroupLayout$Builder;build()Lcom/mojang/blaze3d/pipeline/BindGroupLayout;"
+            )
+    )
+    private static BindGroupLayout modifyBindGroup(
+            BindGroupLayout.Builder builder
+    ) {
+        return builder
+                .withUniform("u_SCSS", UniformType.UNIFORM_BUFFER)
+                .build();
+    }
 
-        if (options.pass().supportsFragmentDiscard()) {
-            builder.add("USE_FRAGMENT_DISCARD");
-        }
 
-        TerrainRenderPass pass = options.pass();
+    @Inject(
+            method = "createShaderConstants",
+            at = @At("RETURN")
+    )
+    private static void createShaderConstants(
+            TerrainRenderPass pass, CallbackInfoReturnable<List<String>> cir
+    ) {
+        List<String> v = cir.getReturnValue();
+
+        v.add("SODIUM_CORE_SHADER_SUPPORT");
+
         if (pass == DefaultTerrainRenderPasses.SOLID) {
-            builder.add("RENDER_PASS_SOLID");
+            v.add("RENDER_PASS_SOLID");
         } else if (pass == DefaultTerrainRenderPasses.CUTOUT) {
-            builder.add("RENDER_PASS_CUTOUT");
+            v.add("RENDER_PASS_CUTOUT");
         } else if (pass == DefaultTerrainRenderPasses.TRANSLUCENT) {
-            builder.add("RENDER_PASS_TRANSLUCENT");
+            v.add("RENDER_PASS_TRANSLUCENT");
         }
-
-        builder.add("USE_VERTEX_COMPRESSION");
-
-        return builder.build();
     }
 }

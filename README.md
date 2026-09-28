@@ -10,7 +10,7 @@
 > changing of Sodium shaders without this mod! If a specific pack does not work on Sodium, it means
 > that the pack must be updated to the specific sodium 0.9.x version.
 >
-> It is currently not planned to update this mod to older sodium/minecraft versions (e.g. 21.x). 
+> It is currently not planned to update this mod to older sodium/minecraft versions (e.g. 1.21.x). 
 
 Enables resourcepacks to replace sodium's shaders, similar to resourcepacks being able to replace vanilla's core shaders.
 If you like my mods consider supporting the development by buying me a coffee:

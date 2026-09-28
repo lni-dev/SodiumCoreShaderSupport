@@ -5,6 +5,13 @@
 ![Environment Client](https://img.shields.io/badge/environment-client-blue)
 [![Discord](https://img.shields.io/discord/317290087383826442?label=discord)](https://discord.gg/shVe3cR)
 
+> [!IMPORTANT]
+> This mod does not receive any further updates. Since Sodium 0.9.0 and Minecraft 26.2, sodium allows
+> changing of Sodium shaders without this mod! If a specific pack does not work on Sodium, it means
+> that the pack must be updated to the specific sodium 0.9.x version.
+>
+> It is currently not planned to update this mod to older sodium/minecraft versions (e.g. 21.x). 
+
 Enables resourcepacks to replace sodium's shaders, similar to resourcepacks being able to replace vanilla's core shaders.
 If you like my mods consider supporting the development by buying me a coffee:
 
